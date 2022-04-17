@@ -1,8 +1,9 @@
 package simpledb.storage;
 
 import java.io.Serializable;
-import java.util.Arrays;
-import java.util.Iterator;
+
+import simpledb.common.Type;
+import java.util.*;
 
 /**
  * Tuple maintains information about the contents of a tuple. Tuples have a
@@ -13,6 +14,9 @@ public class Tuple implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    TupleDesc td;
+    RecordId recordId;
+    Field[] tupleValue;
     /**
      * Create a new tuple with the specified schema (type).
      *
@@ -22,6 +26,8 @@ public class Tuple implements Serializable {
      */
     public Tuple(TupleDesc td) {
         // some code goes here
+        this.td = td;
+        tupleValue = new Field[td.getSize()];
     }
 
     /**
@@ -29,7 +35,7 @@ public class Tuple implements Serializable {
      */
     public TupleDesc getTupleDesc() {
         // some code goes here
-        return null;
+        return td;
     }
 
     /**
@@ -38,7 +44,7 @@ public class Tuple implements Serializable {
      */
     public RecordId getRecordId() {
         // some code goes here
-        return null;
+        return recordId;
     }
 
     /**
@@ -49,6 +55,7 @@ public class Tuple implements Serializable {
      */
     public void setRecordId(RecordId rid) {
         // some code goes here
+        this.recordId = rid;
     }
 
     /**
@@ -61,6 +68,7 @@ public class Tuple implements Serializable {
      */
     public void setField(int i, Field f) {
         // some code goes here
+        tupleValue[i] = f;
     }
 
     /**
@@ -71,7 +79,7 @@ public class Tuple implements Serializable {
      */
     public Field getField(int i) {
         // some code goes here
-        return null;
+        return tupleValue[i];
     }
 
     /**
@@ -84,7 +92,14 @@ public class Tuple implements Serializable {
      */
     public String toString() {
         // some code goes here
-        throw new UnsupportedOperationException("Implement this");
+        StringBuffer sb = new StringBuffer();
+        for(int i = 0;i < tupleValue.length;i++) {
+            sb.append(tupleValue[i].toString());
+            if(i != tupleValue.length-1){
+                sb.append(" ");
+            }
+        }
+        return sb.toString();
     }
 
     /**
@@ -94,7 +109,7 @@ public class Tuple implements Serializable {
     public Iterator<Field> fields()
     {
         // some code goes here
-        return null;
+        return Arrays.asList(tupleValue).iterator();
     }
 
     /**
@@ -103,5 +118,6 @@ public class Tuple implements Serializable {
     public void resetTupleDesc(TupleDesc td)
     {
         // some code goes here
+        this.td = td;
     }
 }

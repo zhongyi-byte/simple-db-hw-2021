@@ -23,12 +23,21 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class Catalog {
 
+    Map<String, DbFile> nameToFile;
+    Map<Integer, DbFile> idToFile;
+    Map<Integer, String> idToKey;
+    Map<Integer, String> idToName;
+
     /**
      * Constructor.
      * Creates a new, empty catalog.
      */
     public Catalog() {
         // some code goes here
+        nameToFile = new HashMap<>();
+        idToFile = new HashMap<>();
+        idToKey = new HashMap<>();
+        idToName = new HashMap<>();
     }
 
     /**
@@ -42,6 +51,10 @@ public class Catalog {
      */
     public void addTable(DbFile file, String name, String pkeyField) {
         // some code goes here
+        nameToFile.put(name, file);
+        idToKey.put(file.getId(), pkeyField);
+        idToFile.put(file.getId(), file);
+        idToName.put(file.getId(), name);
     }
 
     public void addTable(DbFile file, String name) {
@@ -65,7 +78,10 @@ public class Catalog {
      */
     public int getTableId(String name) throws NoSuchElementException {
         // some code goes here
-        return 0;
+        if(!nameToFile.containsKey(name)){
+            throw new NoSuchElementException();
+        }
+        return nameToFile.get(name).getId();
     }
 
     /**
@@ -76,7 +92,10 @@ public class Catalog {
      */
     public TupleDesc getTupleDesc(int tableid) throws NoSuchElementException {
         // some code goes here
-        return null;
+        if(!(idToFile.containsKey(tableid))) {
+            throw new NoSuchElementException();
+        }
+        return idToFile.get(tableid).getTupleDesc();
     }
 
     /**
@@ -87,27 +106,31 @@ public class Catalog {
      */
     public DbFile getDatabaseFile(int tableid) throws NoSuchElementException {
         // some code goes here
-        return null;
+        return idToFile.get(tableid);
     }
 
     public String getPrimaryKey(int tableid) {
         // some code goes here
-        return null;
+        return idToKey.get(tableid);
     }
 
     public Iterator<Integer> tableIdIterator() {
         // some code goes here
-        return null;
+        return idToFile.keySet().iterator();
     }
 
     public String getTableName(int id) {
         // some code goes here
-        return null;
+        return idToName.get(id);
     }
     
     /** Delete all tables from the catalog */
     public void clear() {
         // some code goes here
+        idToFile.clear();
+        idToKey.clear();
+        idToName.clear();
+        nameToFile.clear();
     }
     
     /**
